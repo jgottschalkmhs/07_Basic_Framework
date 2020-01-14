@@ -1,14 +1,20 @@
 from tkinter import *
-import random
 
 
-# Remember to name classes using CamelCase
-class UserInput:
-    def __init__(self):
+# Class that prevents more than one window from opening??
+class OptionsWindow(Frame):
+    def __init__(self, master=None, **kwargs):
+        super().__init__(master, **kwargs)
+        pass
+
+
+class UserInput(Frame):
+    def __init__(self, master="none", **kwargs):
+        super().__init__(master, **kwargs)
+
+        self.options_toplevel = None
+
         print("hello world")
-
-        # Initialise Windows
-        self.get_help = None
 
         # contains formatting
         padding_x = 10
@@ -16,7 +22,7 @@ class UserInput:
         background_color = "light blue"
 
         # GUI
-        self.user_input_frame = Frame(width=600, height=600,bg=background_color, padx=padding_x, pady=padding_y)
+        self.user_input_frame = Frame(master ,bg=background_color, padx=padding_x, pady=padding_y)
         self.user_input_frame.grid()
 
         # heading label (first row)
@@ -39,22 +45,23 @@ class UserInput:
     def play(self):
         print("You pushed play")
 
-    def help(self):
-        print("You asked for help")
-        Help()
+    def help(self, *args):
+        get_help = Help()
+
+    def on_tl_close(self, *args):
+        self.options_toplevel.destroy()
+        self.options_toplevel = None
+
 
 class Help:
     def __init__(self):
 
+        # if help box not already open, open it...
+        if self.help_frame is None:
+            self.help_frame = Toplevel()
+            self.help_frame.protocol('WM_DELETE_WINDOW', self.on_tl_close)
+
         background = "orange"
-
-        # disable help button
-        # partner.help_button.config(state=DISABLED)
-
-        # Sets up child window (ie: help box)
-        self.help_box = Toplevel()
-        # If users press cross at top, closes help and 'releases' help button
-        self.help_box.protocol('WM_DELETE_WINDOW', self.close_help)
 
         self.help_frame = Frame(self.help_box, width=300, height=200, bg=background)
         self.help_frame.grid()
@@ -73,15 +80,12 @@ class Help:
 
     def close_help(self):
         # Put help button back to normal...
-        print("You clicked the cross??")
         self.help_box.destroy()
-
-
+        self.options_toplevel = None
 
 # main routine
 if __name__ == "__main__":
     root = Tk()
     root.title("User Input Goes Here")
-    start_things = UserInput()
+    start_things = UserInput(root)
     root.mainloop()
-

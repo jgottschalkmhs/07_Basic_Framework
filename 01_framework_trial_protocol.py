@@ -1,5 +1,4 @@
 from tkinter import *
-import random
 
 
 # Remember to name classes using CamelCase
@@ -43,18 +42,16 @@ class UserInput:
         print("You asked for help")
         Help()
 
+
 class Help:
     def __init__(self):
 
         background = "orange"
 
-        # disable help button
-        # partner.help_button.config(state=DISABLED)
-
-        # Sets up child window (ie: help box)
         self.help_box = Toplevel()
-        # If users press cross at top, closes help and 'releases' help button
-        self.help_box.protocol('WM_DELETE_WINDOW', self.close_help)
+
+        # ?? call close help if cross at top pushed
+        self.helpbox.protocol('WM_DELETE_WINDOW', self.close_help)
 
         self.help_frame = Frame(self.help_box, width=300, height=200, bg=background)
         self.help_frame.grid()
@@ -72,8 +69,7 @@ class Help:
         dismiss_btn.grid(row=2, pady=10)
 
     def close_help(self):
-        # Put help button back to normal...
-        print("You clicked the cross??")
+        print("Bye!")
         self.help_box.destroy()
 
 
