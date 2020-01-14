@@ -7,7 +7,12 @@ from functools import partial   # To prevent unwanted windows
 # Remember to name classes using CamelCase
 class UserInput:
     def __init__(self, parent):
-        print("hello world")
+
+        # Initialise variables that need checking...
+
+        # Set money / rounds to a STRING and make it 1
+        how_much = StringVar()
+        how_much.set("1")
 
         # contains formatting
         padding_x = 10
@@ -34,9 +39,9 @@ class UserInput:
                                   font=("Arial", "12"))
         self.how_much_lbl.grid(row=0, column=0)
 
-        self.how_much_box = Entry(self.get_input_frame, width=5)
-        self.how_much_box.grid(row=0, column=1)
-
+        self.how_much_entry = Entry(self.get_input_frame, width=5,
+                                    textvariable=how_much)
+        self.how_much_entry.grid(row=0, column=1)
 
         # Buttons frame (third row)
         self.button_frame = Frame(self.user_input_frame)
@@ -50,13 +55,30 @@ class UserInput:
         self.help_button.grid(row=0, column=1)
 
     def play(self):
-        print("You pushed play")
+        amount = self.how_much_entry.get()
+
+        ok = "yes"
+        # Check it's a valid (eg: an integer)
+        try:
+            int(amount)
+        except ValueError:
+            ok = "no"
+            self.how_much_entry.config(bg="pink")
+
+        if ok == "yes":
+            Game(amount)
+
+            # Either destroy main area or disable Play button.
 
     def help(self):
         print("You asked for help")
         get_help = Help(self)
         get_help.help_text.configure(text="Help text goes here")
 
+
+class Game:
+    def __init__(self, amount):
+        print(amount)
 
 class Help:
     def __init__(self, partner):
