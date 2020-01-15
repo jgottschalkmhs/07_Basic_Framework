@@ -66,7 +66,7 @@ class UserInput:
             self.how_much_entry.config(bg="pink")
 
         if ok == "yes":
-            Game(amount)
+            Game(self, amount)
 
             # Either destroy main area or disable Play button.
 
@@ -77,8 +77,65 @@ class UserInput:
 
 
 class Game:
-    def __init__(self, amount):
+    def __init__(self, partner, amount):
         print(amount)
+
+        # disable play button
+        partner.play_button.config(state=DISABLED)
+
+        # Initialise variables
+        self.var_gained = IntVar()
+        self.var_lost = IntVar()
+
+        self.var_balance=IntVar()
+        self.var_balance.set(amount)
+
+        # GUI Setup
+        self.game_box = Toplevel()
+        self.game_frame = Frame(self.game_box)
+        self.game_frame.grid()
+
+        # Heading Row
+        self.heading_label = Label(self.game_frame, text="Heading",
+                                   font="Arial 24 bold", padx=10,
+                                   pady=10)
+        self.heading_label.grid(row=0)
+
+        # Plus / Minus Row
+        self.plus_minus_frame = Frame(self.game_frame)
+        self.plus_minus_frame.grid(row=1)
+
+        # Buttons!
+        self.gain_btn = Button(self.plus_minus_frame, text="Gain",
+                               padx=10, pady=10, command=self.gain)
+        self.gain_btn.grid(row=0, column=0)
+
+        self.lose_btn = Button(self.plus_minus_frame, text="Lose",
+                               padx=10, pady=10, command=self.lose)
+        self.lose_btn.grid(row=0, column=1)
+
+        # Balance Label
+        self.balance_frame = Frame(self.game_frame)
+        self.balance_frame.grid(row=2)
+
+        self.balance_label = Label(self.balance_frame, text="Balance...")
+        self.balance_label.grid(row=0, column=0)
+
+        # Quit Button
+
+    def gain(self):
+        # retrieve balance and add 1 to it
+        balance = self.var_balance.get()
+        balance += 1
+        self.var_balance.set(balance)
+        self.balance_label.configure(text="Balance: {}".format(balance))
+
+    def lose(self):
+        # retrieve balance and subtract 1 from it
+        balance = self.var_balance.get()
+        balance -= 1
+        self.var_balance.set(balance)
+        self.balance_label.configure(text="Balance: {}".format(balance))
 
 class Help:
     def __init__(self, partner):
